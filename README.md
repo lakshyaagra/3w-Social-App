@@ -1,4 +1,4 @@
-# Commons — Mini Social Post Application
+# Social — Mini Social Post Application
 
 Built for the 3W Business Full Stack Internship, Round 1, Task 1: a mini social
 feed inspired by the TaskPlanet app's Social Page. Users can sign up, post
