@@ -63,13 +63,13 @@ const Feed = () => {
     }
   };
 
-  const handlePostCreated = (newPost) => {
+  const handlePostCreated = useCallback((newPost) => {
     setPosts((prev) => [newPost, ...prev]);
-  };
+  }, []);
 
-  const handlePostUpdated = (updatedPost) => {
+  const handlePostUpdated = useCallback((updatedPost) => {
     setPosts((prev) => prev.map((p) => (p._id === updatedPost._id ? updatedPost : p)));
-  };
+  }, []);
 
   const handleComposeClick = () => {
     composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });

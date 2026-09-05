@@ -18,6 +18,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { getInitial } from '../utils/avatar';
 
 const timeAgo = (dateStr) => {
   const diffMs = Date.now() - new Date(dateStr).getTime();
@@ -73,7 +74,7 @@ const PostCard = ({ post, onPostUpdated }) => {
       <CardContent sx={{ pb: 1 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
           <Avatar sx={{ bgcolor: 'primary.main', width: 36, height: 36, fontSize: 15 }}>
-            {post.username.charAt(0).toUpperCase()}
+            {getInitial(post.username)}
           </Avatar>
           <Box>
             <Typography variant="subtitle2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
@@ -97,6 +98,7 @@ const PostCard = ({ post, onPostUpdated }) => {
           component="img"
           image={post.imageUrl}
           alt="post"
+          loading="lazy"
           sx={{ maxHeight: 480, objectFit: 'cover' }}
         />
       )}
@@ -160,4 +162,4 @@ const PostCard = ({ post, onPostUpdated }) => {
   );
 };
 
-export default PostCard;
+export default React.memo(PostCard);

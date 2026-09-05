@@ -2,6 +2,7 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, Avatar, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getInitial } from '../utils/avatar';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -32,7 +33,7 @@ const Navbar = () => {
           {user ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
               <Avatar sx={{ width: 34, height: 34, bgcolor: 'primary.main', fontSize: 14, color: 'primary.contrastText' }}>
-                {user.username.charAt(0).toUpperCase()}
+                {getInitial(user.username)}
               </Avatar>
               <Button size="small" onClick={handleLogout} color="inherit">
                 Log out

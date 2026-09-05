@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const postRoutes = require('./routes/postRoutes');
@@ -9,6 +10,7 @@ const app = express();
 
 connectDB();
 
+app.use(helmet()); // sets sane security headers (X-Frame-Options, no-sniff, etc.)
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 app.use(express.json());
 

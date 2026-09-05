@@ -22,4 +22,9 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// The feed always sorts by recency (or falls back to it as a tiebreaker for
+// mostLiked/mostCommented), so an index here keeps pagination fast as the
+// collection grows instead of doing a full collection scan on every page.
+postSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model('Post', postSchema);
