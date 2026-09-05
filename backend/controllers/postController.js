@@ -50,8 +50,29 @@ exports.getFeed = async (req, res) => {
     const limit = Math.min(parseInt(req.query.limit) || 10, 50);
     const skip = (page - 1) * limit;
 
+    // sort=newest (default) | mostLiked | mostCommented — matches the
+    // filter chips on the feed. Array-length sorts need an aggregation
+    // since Mongo can't sort by array size directly on a find().
+    const sort = req.query.sort || 'newest';
+    const sortStage =
+      sort === 'mostLiked'
+        ? { likesCount: -1, createdAt: -1 }
+        : sort === 'mostCommented'
+        ? { commentsCount: -1, createdAt: -1 }
+        : { createdAt: -1 };
+
     const [posts, total] = await Promise.all([
-      Post.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Post.aggregate([
+        {
+          $addFields: {
+            likesCount: { $size: '$likes' },
+            commentsCount: { $size: '$comments' },
+          },
+        },
+        { $sort: sortStage },
+        { $skip: skip },
+        { $limit: limit },
+      ]),
       Post.countDocuments(),
     ]);
 

@@ -1,31 +1,31 @@
 import { createTheme } from '@mui/material/styles';
 
-// Design tokens for "Commons" — a plain-spoken community feed.
-// Ink-navy for structure/text, a warm marigold accent for actions and
-// likes, set against a slightly warm (not pure white) paper background.
+// Design tokens matched to TaskPlanet's Social page: near-black navy
+// surfaces, a bright blue accent for active/interactive elements, and
+// a warm gold reserved for the like/star accent.
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'dark',
     primary: {
-      main: '#1F2A44', // ink navy — text, nav, primary buttons
-      light: '#3C4A6B',
-      dark: '#131B2E',
-      contrastText: '#F6F5F2',
+      main: '#4C8DFF', // bright blue — active tabs, icons, links
+      light: '#7FADFF',
+      dark: '#2F6FE0',
+      contrastText: '#0A0E1A',
     },
     secondary: {
-      main: '#D98F27', // marigold — likes, accents, active states
-      contrastText: '#1F2A44',
+      main: '#F0B93D', // gold — likes/star accents
+      contrastText: '#0A0E1A',
     },
     background: {
-      default: '#F6F5F2', // warm paper, not stark white
-      paper: '#FFFFFF',
+      default: '#0A0E1A', // near-black navy
+      paper: '#121729', // card surface, one step lighter
     },
     text: {
-      primary: '#1F2A44',
-      secondary: '#5B6478',
+      primary: '#E7E9F0',
+      secondary: '#8B93A8',
     },
-    divider: '#E4E1D8',
-    error: { main: '#B3423A' },
+    divider: '#232B45',
+    error: { main: '#E5484D' },
   },
   typography: {
     fontFamily: '"Inter", "Helvetica Neue", Arial, sans-serif',
@@ -38,12 +38,12 @@ const theme = createTheme({
     button: { textTransform: 'none', fontWeight: 600 },
   },
   shape: {
-    borderRadius: 10,
+    borderRadius: 14,
   },
   components: {
     MuiButton: {
       styleOverrides: {
-        root: { borderRadius: 8, boxShadow: 'none' },
+        root: { borderRadius: 20, boxShadow: 'none' },
         contained: {
           boxShadow: 'none',
           '&:hover': { boxShadow: 'none' },
@@ -58,6 +58,11 @@ const theme = createTheme({
     MuiTextField: {
       defaultProps: {
         variant: 'outlined',
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: { borderRadius: 20 },
       },
     },
   },

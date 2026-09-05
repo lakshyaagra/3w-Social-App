@@ -1,10 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { Card, CardContent, TextField, Box, Button, IconButton, Typography, Alert } from '@mui/material';
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
+import React, { useState, useRef, forwardRef } from 'react';
+import { Card, CardContent, TextField, Box, Button, IconButton, Typography, Alert, Divider } from '@mui/material';
+import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
+import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
 import api from '../api/axios';
 
-const CreatePost = ({ onPostCreated }) => {
+const CreatePost = forwardRef(({ onPostCreated }, ref) => {
   const [text, setText] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -55,25 +56,33 @@ const CreatePost = ({ onPostCreated }) => {
   };
 
   return (
-    <Card variant="outlined" sx={{ borderColor: 'divider' }}>
+    <Card ref={ref} variant="outlined" sx={{ borderColor: 'divider' }}>
       <CardContent>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Create Post
+        </Typography>
+
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
             fullWidth
             multiline
             minRows={2}
-            placeholder="Share something with everyone..."
+            placeholder="What's on your mind?"
             value={text}
             onChange={(e) => setText(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
+              '& .MuiOutlinedInput-root': { px: 0 },
+            }}
           />
 
           {preview && (
-            <Box sx={{ position: 'relative', mt: 1.5, display: 'inline-block' }}>
+            <Box sx={{ position: 'relative', mt: 1, mb: 1.5, display: 'inline-block' }}>
               <Box
                 component="img"
                 src={preview}
                 alt="preview"
-                sx={{ maxHeight: 220, borderRadius: 1, display: 'block' }}
+                sx={{ maxHeight: 220, borderRadius: 2, display: 'block' }}
               />
               <IconButton
                 size="small"
@@ -86,17 +95,19 @@ const CreatePost = ({ onPostCreated }) => {
           )}
 
           {error && (
-            <Alert severity="error" sx={{ mt: 1.5 }}>
+            <Alert severity="error" sx={{ mb: 1.5 }}>
               {error}
             </Alert>
           )}
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1.5 }}>
+          <Divider sx={{ mb: 1.5 }} />
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Button
               component="label"
               size="small"
-              startIcon={<ImageOutlinedIcon />}
-              color="inherit"
+              startIcon={<CameraAltOutlinedIcon />}
+              color="primary"
             >
               Photo
               <input
@@ -108,7 +119,17 @@ const CreatePost = ({ onPostCreated }) => {
               />
             </Button>
 
-            <Button type="submit" variant="contained" disabled={submitting}>
+            <Button
+              type="submit"
+              variant="contained"
+              endIcon={<SendIcon sx={{ fontSize: 16 }} />}
+              disabled={submitting}
+              sx={{
+                bgcolor: 'text.primary',
+                color: 'background.default',
+                '&:hover': { bgcolor: 'text.secondary' },
+              }}
+            >
               {submitting ? 'Posting...' : 'Post'}
             </Button>
           </Box>
@@ -116,6 +137,6 @@ const CreatePost = ({ onPostCreated }) => {
       </CardContent>
     </Card>
   );
-};
+});
 
 export default CreatePost;
