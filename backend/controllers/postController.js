@@ -1,17 +1,17 @@
-const streamifier = require('streamifier');
-const cloudinary = require('../config/cloudinary');
-const Post = require('../models/Post');
+const streamifier = require("streamifier");
+const cloudinary = require("../config/cloudinary");
+const Post = require("../models/Post");
 
 // Pipes an in-memory file buffer (from multer) up to Cloudinary and
 // resolves with the upload result once it's done.
 const uploadToCloudinary = (buffer) =>
   new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
-      { folder: '3w-social-posts' },
+      { folder: "3w-social-posts" },
       (error, result) => {
         if (result) resolve(result);
         else reject(error);
-      }
+      },
     );
     streamifier.createReadStream(buffer).pipe(stream);
   });
@@ -22,7 +22,9 @@ exports.createPost = async (req, res) => {
 
     // Neither field is mandatory on its own, but at least one must be present.
     if ((!text || !text.trim()) && !req.file) {
-      return res.status(400).json({ message: 'Post must contain text, an image, or both' });
+      return res
+        .status(400)
+        .json({ message: "Post must contain text, an image, or both" });
     }
 
     let imageUrl = null;
@@ -34,13 +36,15 @@ exports.createPost = async (req, res) => {
     const post = await Post.create({
       author: req.user.id,
       username: req.user.username,
-      text: text ? text.trim() : '',
+      text: text ? text.trim() : "",
       imageUrl,
     });
 
     res.status(201).json(post);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create post', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to create post", error: err.message });
   }
 };
 
@@ -53,20 +57,20 @@ exports.getFeed = async (req, res) => {
     // sort=newest (default) | mostLiked | mostCommented — matches the
     // filter chips on the feed. Array-length sorts need an aggregation
     // since Mongo can't sort by array size directly on a find().
-    const sort = req.query.sort || 'newest';
+    const sort = req.query.sort || "newest";
     const sortStage =
-      sort === 'mostLiked'
+      sort === "mostLiked"
         ? { likesCount: -1, createdAt: -1 }
-        : sort === 'mostCommented'
-        ? { commentsCount: -1, createdAt: -1 }
-        : { createdAt: -1 };
+        : sort === "mostCommented"
+          ? { commentsCount: -1, createdAt: -1 }
+          : { createdAt: -1 };
 
     const [posts, total] = await Promise.all([
       Post.aggregate([
         {
           $addFields: {
-            likesCount: { $size: '$likes' },
-            commentsCount: { $size: '$comments' },
+            likesCount: { $size: "$likes" },
+            commentsCount: { $size: "$comments" },
           },
         },
         { $sort: sortStage },
@@ -83,14 +87,16 @@ exports.getFeed = async (req, res) => {
       hasMore: page * limit < total,
     });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to load feed', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to load feed", error: err.message });
   }
 };
 
 exports.toggleLike = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: 'Post not found' });
+    if (!post) return res.status(404).json({ message: "Post not found" });
 
     const username = req.user.username;
     const alreadyLiked = post.likes.includes(username);
@@ -104,7 +110,9 @@ exports.toggleLike = async (req, res) => {
     await post.save();
     res.json(post);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to update like', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to update like", error: err.message });
   }
 };
 
@@ -112,17 +120,19 @@ exports.addComment = async (req, res) => {
   try {
     const { text } = req.body;
     if (!text || !text.trim()) {
-      return res.status(400).json({ message: 'Comment text is required' });
+      return res.status(400).json({ message: "Comment text is required" });
     }
 
     const post = await Post.findById(req.params.id);
-    if (!post) return res.status(404).json({ message: 'Post not found' });
+    if (!post) return res.status(404).json({ message: "Post not found" });
 
     post.comments.push({ username: req.user.username, text: text.trim() });
     await post.save();
 
     res.status(201).json(post);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to add comment', error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to add comment", error: err.message });
   }
 };

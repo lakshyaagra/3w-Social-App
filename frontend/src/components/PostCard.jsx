@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,18 +12,18 @@ import {
   Button,
   Divider,
   Collapse,
-} from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import api from '../api/axios';
-import { useAuth } from '../context/AuthContext';
-import { getInitial } from '../utils/avatar';
+} from "@mui/material";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import api from "../api/axios";
+import { useAuth } from "../context/AuthContext";
+import { getInitial } from "../utils/avatar";
 
 const timeAgo = (dateStr) => {
   const diffMs = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return 'just now';
+  if (mins < 1) return "just now";
   if (mins < 60) return `${mins}m ago`;
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return `${hrs}h ago`;
@@ -33,7 +33,7 @@ const timeAgo = (dateStr) => {
 const PostCard = ({ post, onPostUpdated }) => {
   const { user } = useAuth();
   const [commentsOpen, setCommentsOpen] = useState(false);
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const liked = user ? post.likes.includes(user.username) : false;
@@ -59,9 +59,11 @@ const PostCard = ({ post, onPostUpdated }) => {
     if (!commentText.trim() || submitting) return;
     setSubmitting(true);
     try {
-      const { data } = await api.post(`/posts/${post._id}/comment`, { text: commentText.trim() });
+      const { data } = await api.post(`/posts/${post._id}/comment`, {
+        text: commentText.trim(),
+      });
       onPostUpdated(data);
-      setCommentText('');
+      setCommentText("");
     } catch (err) {
       // no-op; the input keeps its text so the user can retry
     } finally {
@@ -70,14 +72,24 @@ const PostCard = ({ post, onPostUpdated }) => {
   };
 
   return (
-    <Card variant="outlined" sx={{ borderColor: 'divider' }}>
+    <Card variant="outlined" sx={{ borderColor: "divider" }}>
       <CardContent sx={{ pb: 1 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-          <Avatar sx={{ bgcolor: 'primary.main', width: 36, height: 36, fontSize: 15 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1.5 }}>
+          <Avatar
+            sx={{
+              bgcolor: "primary.main",
+              width: 36,
+              height: 36,
+              fontSize: 15,
+            }}
+          >
             {getInitial(post.username)}
           </Avatar>
           <Box>
-            <Typography variant="subtitle2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+            <Typography
+              variant="subtitle2"
+              sx={{ fontWeight: 600, lineHeight: 1.2 }}
+            >
               {post.username}
             </Typography>
             <Typography variant="caption" color="text.secondary">
@@ -87,7 +99,10 @@ const PostCard = ({ post, onPostUpdated }) => {
         </Box>
 
         {post.text && (
-          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', mb: post.imageUrl ? 1.5 : 0.5 }}>
+          <Typography
+            variant="body1"
+            sx={{ whiteSpace: "pre-wrap", mb: post.imageUrl ? 1.5 : 0.5 }}
+          >
             {post.text}
           </Typography>
         )}
@@ -99,22 +114,41 @@ const PostCard = ({ post, onPostUpdated }) => {
           image={post.imageUrl}
           alt="post"
           loading="lazy"
-          sx={{ maxHeight: 480, objectFit: 'cover' }}
+          sx={{ maxHeight: 480, objectFit: "cover" }}
         />
       )}
 
       <CardContent sx={{ pt: 1.5 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <IconButton size="small" onClick={handleLike} disabled={!user} color="secondary">
-            {liked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <IconButton
+            size="small"
+            onClick={handleLike}
+            disabled={!user}
+            color="secondary"
+          >
+            {liked ? (
+              <FavoriteIcon fontSize="small" />
+            ) : (
+              <FavoriteBorderIcon fontSize="small" />
+            )}
           </IconButton>
-          <Tooltip title={post.likes.length ? post.likes.join(', ') : 'No likes yet'}>
-            <Typography variant="body2" color="text.secondary" sx={{ cursor: 'default' }}>
+          <Tooltip
+            title={post.likes.length ? post.likes.join(", ") : "No likes yet"}
+          >
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ cursor: "default" }}
+            >
               {post.likes.length}
             </Typography>
           </Tooltip>
 
-          <IconButton size="small" onClick={() => setCommentsOpen((v) => !v)} sx={{ ml: 1.5 }}>
+          <IconButton
+            size="small"
+            onClick={() => setCommentsOpen((v) => !v)}
+            sx={{ ml: 1.5 }}
+          >
             <ChatBubbleOutlineIcon fontSize="small" />
           </IconButton>
           <Typography variant="body2" color="text.secondary">
@@ -124,7 +158,14 @@ const PostCard = ({ post, onPostUpdated }) => {
 
         <Collapse in={commentsOpen} timeout="auto" unmountOnExit>
           <Divider sx={{ my: 1.5 }} />
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: user ? 1.5 : 0 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+              mb: user ? 1.5 : 0,
+            }}
+          >
             {post.comments.length === 0 && (
               <Typography variant="body2" color="text.secondary">
                 No comments yet — be the first to say something.
@@ -135,7 +176,7 @@ const PostCard = ({ post, onPostUpdated }) => {
                 <Typography variant="body2">
                   <Box component="span" sx={{ fontWeight: 600 }}>
                     {c.username}
-                  </Box>{' '}
+                  </Box>{" "}
                   {c.text}
                 </Typography>
               </Box>
@@ -143,7 +184,11 @@ const PostCard = ({ post, onPostUpdated }) => {
           </Box>
 
           {user && (
-            <Box component="form" onSubmit={handleAddComment} sx={{ display: 'flex', gap: 1 }}>
+            <Box
+              component="form"
+              onSubmit={handleAddComment}
+              sx={{ display: "flex", gap: 1 }}
+            >
               <TextField
                 size="small"
                 fullWidth
@@ -151,7 +196,12 @@ const PostCard = ({ post, onPostUpdated }) => {
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
               />
-              <Button type="submit" variant="contained" size="small" disabled={submitting || !commentText.trim()}>
+              <Button
+                type="submit"
+                variant="contained"
+                size="small"
+                disabled={submitting || !commentText.trim()}
+              >
                 Post
               </Button>
             </Box>

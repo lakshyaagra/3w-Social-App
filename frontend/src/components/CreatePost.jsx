@@ -1,15 +1,25 @@
-import React, { useState, useRef, forwardRef } from 'react';
-import { Card, CardContent, TextField, Box, Button, IconButton, Typography, Alert, Divider } from '@mui/material';
-import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import SendIcon from '@mui/icons-material/Send';
-import CloseIcon from '@mui/icons-material/Close';
-import api from '../api/axios';
+import React, { useState, useRef, forwardRef } from "react";
+import {
+  Card,
+  CardContent,
+  TextField,
+  Box,
+  Button,
+  IconButton,
+  Typography,
+  Alert,
+  Divider,
+} from "@mui/material";
+import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
+import SendIcon from "@mui/icons-material/Send";
+import CloseIcon from "@mui/icons-material/Close";
+import api from "../api/axios";
 
 const CreatePost = forwardRef(({ onPostCreated }, ref) => {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -23,40 +33,42 @@ const CreatePost = forwardRef(({ onPostCreated }, ref) => {
   const clearImage = () => {
     setImageFile(null);
     setPreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!text.trim() && !imageFile) {
-      setError('Add some text or an image before posting.');
+      setError("Add some text or an image before posting.");
       return;
     }
 
     setSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append('text', text.trim());
-      if (imageFile) formData.append('image', imageFile);
+      formData.append("text", text.trim());
+      if (imageFile) formData.append("image", imageFile);
 
-      const { data } = await api.post('/posts', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const { data } = await api.post("/posts", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       onPostCreated(data);
-      setText('');
+      setText("");
       clearImage();
     } catch (err) {
-      setError(err.response?.data?.message || 'Could not create the post. Try again.');
+      setError(
+        err.response?.data?.message || "Could not create the post. Try again.",
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Card ref={ref} variant="outlined" sx={{ borderColor: 'divider' }}>
+    <Card ref={ref} variant="outlined" sx={{ borderColor: "divider" }}>
       <CardContent>
         <Typography variant="h6" sx={{ mb: 2 }}>
           Create Post
@@ -71,23 +83,37 @@ const CreatePost = forwardRef(({ onPostCreated }, ref) => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             sx={{
-              '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiOutlinedInput-root': { px: 0 },
+              "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+              "& .MuiOutlinedInput-root": { px: 0 },
             }}
           />
 
           {preview && (
-            <Box sx={{ position: 'relative', mt: 1, mb: 1.5, display: 'inline-block' }}>
+            <Box
+              sx={{
+                position: "relative",
+                mt: 1,
+                mb: 1.5,
+                display: "inline-block",
+              }}
+            >
               <Box
                 component="img"
                 src={preview}
                 alt="preview"
-                sx={{ maxHeight: 220, borderRadius: 2, display: 'block' }}
+                sx={{ maxHeight: 220, borderRadius: 2, display: "block" }}
               />
               <IconButton
                 size="small"
                 onClick={clearImage}
-                sx={{ position: 'absolute', top: 4, right: 4, bgcolor: 'rgba(0,0,0,0.55)', color: '#fff', '&:hover': { bgcolor: 'rgba(0,0,0,0.7)' } }}
+                sx={{
+                  position: "absolute",
+                  top: 4,
+                  right: 4,
+                  bgcolor: "rgba(0,0,0,0.55)",
+                  color: "#fff",
+                  "&:hover": { bgcolor: "rgba(0,0,0,0.7)" },
+                }}
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
@@ -102,7 +128,13 @@ const CreatePost = forwardRef(({ onPostCreated }, ref) => {
 
           <Divider sx={{ mb: 1.5 }} />
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <Button
               component="label"
               size="small"
@@ -125,12 +157,12 @@ const CreatePost = forwardRef(({ onPostCreated }, ref) => {
               endIcon={<SendIcon sx={{ fontSize: 16 }} />}
               disabled={submitting}
               sx={{
-                bgcolor: 'text.primary',
-                color: 'background.default',
-                '&:hover': { bgcolor: 'text.secondary' },
+                bgcolor: "text.primary",
+                color: "background.default",
+                "&:hover": { bgcolor: "text.secondary" },
               }}
             >
-              {submitting ? 'Posting...' : 'Post'}
+              {submitting ? "Posting..." : "Post"}
             </Button>
           </Box>
         </Box>

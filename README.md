@@ -33,6 +33,7 @@ npm run dev
 ```
 
 Required `.env` values:
+
 - `MONGODB_URI` — your MongoDB Atlas connection string
 - `JWT_SECRET` — any long random string
 - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` — from your Cloudinary dashboard
@@ -49,14 +50,14 @@ npm run dev
 
 ## API reference
 
-| Method | Route | Auth | Description |
-|---|---|---|---|
-| POST | `/api/auth/signup` | – | Create an account |
-| POST | `/api/auth/login` | – | Log in, returns JWT |
-| GET | `/api/posts?page=1&limit=10` | – | Paginated public feed |
-| POST | `/api/posts` | required | Create a post (`multipart/form-data`: `text`, `image`) |
-| POST | `/api/posts/:id/like` | required | Toggle like on a post |
-| POST | `/api/posts/:id/comment` | required | Add a comment (`{ text }`) |
+| Method | Route                        | Auth     | Description                                            |
+| ------ | ---------------------------- | -------- | ------------------------------------------------------ |
+| POST   | `/api/auth/signup`           | –        | Create an account                                      |
+| POST   | `/api/auth/login`            | –        | Log in, returns JWT                                    |
+| GET    | `/api/posts?page=1&limit=10` | –        | Paginated public feed                                  |
+| POST   | `/api/posts`                 | required | Create a post (`multipart/form-data`: `text`, `image`) |
+| POST   | `/api/posts/:id/like`        | required | Toggle like on a post                                  |
+| POST   | `/api/posts/:id/comment`     | required | Add a comment (`{ text }`)                             |
 
 ## Deployment
 
